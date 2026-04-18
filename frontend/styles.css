@@ -1,0 +1,12 @@
+:root{ --bg:#f5f7fb; --col:#fff; --accent:#2b6cb0 }
+body{ font-family: Inter, system-ui, Arial; margin:0; background:var(--bg); color:#111 }
+.app{ padding:20px }
+header{ margin-bottom:12px }
+.board .controls{ display:flex; gap:12px; margin-bottom:16px }
+.inline-form{ display:flex; gap:8px; align-items:center }
+.columns{ display:flex; gap:12px; align-items:flex-start }
+.column{ background:var(--col); padding:12px; border-radius:8px; min-width:220px; box-shadow:0 1px 3px rgba(0,0,0,0.08) }
+.column h3{ margin:0 0 8px 0 }
+.task{ background:#fff; padding:8px; margin-bottom:8px; border-radius:6px; cursor:grab; box-shadow:0 1px 2px rgba(0,0,0,0.06) }
+.task-title{ font-weight:600 }
+.task-meta{ font-size:12px; color:#666 }
