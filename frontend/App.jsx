@@ -51,6 +51,15 @@ export default function App(){
     await fetchData()
   }
 
+  const onEditTask = async (taskId, { title, author_id, assignee_id, status })=>{
+    await fetch(`${API_BASE}/tasks/${taskId}`,{
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, author_id, assignee_id, status })
+    })
+    await fetchData()
+  }
+
   return (
     <div className="app">
       <header>
@@ -58,7 +67,7 @@ export default function App(){
       </header>
       <main>
         {loading ? <p>Загрузка...</p> : (
-          <Board users={users} tasks={tasks} onMoveTask={onMoveTask} onCreateTask={onCreateTask} onCreateUser={onCreateUser} />
+          <Board users={users} tasks={tasks} onMoveTask={onMoveTask} onCreateTask={onCreateTask} onCreateUser={onCreateUser} onEditTask={onEditTask} />
         )}
       </main>
     </div>
