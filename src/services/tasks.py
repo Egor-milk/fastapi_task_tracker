@@ -19,13 +19,15 @@ class TasksService:
     async def edit_task(self, uow: IUnitOfWork, task_id: int, task: TaskSchemaEdit):
         tasks_dict = task.model_dump()
         async with uow:
+            curr_task = await uow.tasks.find_one(id=task_id)
             await uow.tasks.edit_one(task_id, tasks_dict)
 
-            curr_task = await uow.tasks.find_one(id=task_id)
             task_history_log = TaskHistorySchemaAdd(
                 task_id=task_id,
                 previous_assignee_id=curr_task.assignee_id,
-                new_assignee_id=task.assignee_id
+                new_assignee_id=task.assignee_id,
+                previous_status=curr_task.status,
+                new_status=task.status
             )
             task_history_log = task_history_log.model_dump()
             await uow.task_history.add_one(task_history_log)

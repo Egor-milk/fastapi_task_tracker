@@ -22,22 +22,22 @@ export default function App(){
 
   useEffect(()=>{ fetchData() }, [])
 
-  const onMoveTask = async (taskId, newAssigneeId) =>{
+  const onMoveTask = async (taskId, newStatus) =>{
     const task = tasks.find(t=>t.id===taskId)
     if(!task) return
     await fetch(`${API_BASE}/tasks/${taskId}`,{
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ author_id: task.author_id, assignee_id: newAssigneeId })
+      body: JSON.stringify({ author_id: task.author_id, assignee_id: task.assignee_id, status: newStatus })
     })
     await fetchData()
   }
 
-  const onCreateTask = async ({ title, author_id, assignee_id })=>{
+  const onCreateTask = async ({ title, author_id, assignee_id, status })=>{
     await fetch(`${API_BASE}/tasks`,{
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, author_id, assignee_id })
+      body: JSON.stringify({ title, author_id, assignee_id, status })
     })
     await fetchData()
   }

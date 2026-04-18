@@ -6,11 +6,12 @@ export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreate
   const [newTaskTitle, setNewTaskTitle] = useState('')
   const [newTaskAuthor, setNewTaskAuthor] = useState(users[0]?.id || '')
   const [newTaskAssignee, setNewTaskAssignee] = useState(users[0]?.id || '')
+  const [newTaskStatus, setNewTaskStatus] = useState('queue')
 
-  // update selects when users change
   React.useEffect(()=>{
     setNewTaskAuthor(users[0]?.id || '')
     setNewTaskAssignee(users[0]?.id || '')
+    setNewTaskStatus('queue')
   }, [users])
 
   const handleCreateUser = async (e)=>{
@@ -23,9 +24,16 @@ export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreate
   const handleCreateTask = async (e)=>{
     e.preventDefault()
     if(!newTaskTitle.trim()) return
-    await onCreateTask({ title: newTaskTitle.trim(), author_id: Number(newTaskAuthor), assignee_id: Number(newTaskAssignee) })
+    await onCreateTask({ title: newTaskTitle.trim(), author_id: Number(newTaskAuthor), assignee_id: Number(newTaskAssignee), status: newTaskStatus })
     setNewTaskTitle('')
+    setNewTaskStatus('queue')
   }
+
+  const columns = [
+    { id: 'queue', name: 'Очередь' },
+    { id: 'in_progress', name: 'В работе' },
+    { id: 'done', name: 'Готов' }
+  ]
 
   return (
     <div className="board">
@@ -43,13 +51,16 @@ export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreate
           <select value={newTaskAssignee} onChange={e=>setNewTaskAssignee(e.target.value)}>
             {users.map(u=> <option key={u.id} value={u.id}>{u.name}</option>)}
           </select>
+          <select value={newTaskStatus} onChange={e=>setNewTaskStatus(e.target.value)}>
+            {columns.map(c=> <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
           <button type="submit">Добавить задачу</button>
         </form>
       </section>
 
       <div className="columns">
-        {users.map(user=> (
-          <Column key={user.id} user={user} tasks={tasks.filter(t=>t.assignee_id===user.id)} onMoveTask={onMoveTask} />
+        {columns.map(col=> (
+          <Column key={col.id} column={col} tasks={tasks.filter(t=>t.status===col.id)} onMoveTask={onMoveTask} />
         ))}
       </div>
     </div>
