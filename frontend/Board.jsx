@@ -7,6 +7,7 @@ export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreate
   const [newTaskAuthor, setNewTaskAuthor] = useState(users[0]?.id || '')
   const [newTaskAssignee, setNewTaskAssignee] = useState(users[0]?.id || '')
   const [newTaskStatus, setNewTaskStatus] = useState('queue')
+  const [showCreateModal, setShowCreateModal] = useState(false)
 
   React.useEffect(()=>{
     setNewTaskAuthor(users[0]?.id || '')
@@ -27,7 +28,11 @@ export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreate
     await onCreateTask({ title: newTaskTitle.trim(), author_id: Number(newTaskAuthor), assignee_id: Number(newTaskAssignee), status: newTaskStatus })
     setNewTaskTitle('')
     setNewTaskStatus('queue')
+    setShowCreateModal(false)
   }
+
+  const openCreateModal = ()=> setShowCreateModal(true)
+  const closeCreateModal = ()=> setShowCreateModal(false)
 
   const columns = [
     { id: 'queue', name: 'Очередь' },
@@ -43,19 +48,9 @@ export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreate
           <button type="submit">Добавить пользователя</button>
         </form>
 
-        <form onSubmit={handleCreateTask} className="inline-form">
-          <input placeholder="Новая задача" value={newTaskTitle} onChange={e=>setNewTaskTitle(e.target.value)} />
-          <select value={newTaskAuthor} onChange={e=>setNewTaskAuthor(e.target.value)}>
-            {users.map(u=> <option key={u.id} value={u.id}>{u.name}</option>)}
-          </select>
-          <select value={newTaskAssignee} onChange={e=>setNewTaskAssignee(e.target.value)}>
-            {users.map(u=> <option key={u.id} value={u.id}>{u.name}</option>)}
-          </select>
-          <select value={newTaskStatus} onChange={e=>setNewTaskStatus(e.target.value)}>
-            {columns.map(c=> <option key={c.id} value={c.id}>{c.name}</option>)}
-          </select>
-          <button type="submit">Добавить задачу</button>
-        </form>
+        <div className="inline-form">
+          <button onClick={openCreateModal}>Добавить задачу</button>
+        </div>
       </section>
 
       <div className="columns">
@@ -63,6 +58,31 @@ export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreate
           <Column key={col.id} column={col} tasks={tasks.filter(t=>t.status===col.id)} onMoveTask={onMoveTask} />
         ))}
       </div>
+
+      {showCreateModal && (
+        <div className="modal-overlay" onClick={closeCreateModal}>
+          <div className="modal-content" onClick={e=>e.stopPropagation()}>
+            <button className="modal-close" onClick={closeCreateModal}>×</button>
+            <h3>Создать задачу</h3>
+            <form onSubmit={handleCreateTask} className="modal-form">
+              <input placeholder="Новая задача" value={newTaskTitle} onChange={e=>setNewTaskTitle(e.target.value)} />
+              <select value={newTaskAuthor} onChange={e=>setNewTaskAuthor(e.target.value)}>
+                {users.map(u=> <option key={u.id} value={u.id}>{u.name}</option>)}
+              </select>
+              <select value={newTaskAssignee} onChange={e=>setNewTaskAssignee(e.target.value)}>
+                {users.map(u=> <option key={u.id} value={u.id}>{u.name}</option>)}
+              </select>
+              <select value={newTaskStatus} onChange={e=>setNewTaskStatus(e.target.value)}>
+                {columns.map(c=> <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+              <div style={{display:'flex', gap:8, justifyContent:'flex-end'}}>
+                <button type="button" onClick={closeCreateModal}>Отмена</button>
+                <button type="submit">Добавить</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
