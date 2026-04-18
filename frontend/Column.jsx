@@ -1,7 +1,7 @@
 import React from 'react'
 import TaskCard from './TaskCard'
 
-export default function Column({ column, tasks, onMoveTask }){
+export default function Column({ column, tasks, onMoveTask, users }){
   const allowDrop = (e)=> e.preventDefault()
   const onDrop = (e)=>{
     e.preventDefault()
@@ -14,7 +14,7 @@ export default function Column({ column, tasks, onMoveTask }){
     <div className="column" onDragOver={allowDrop} onDrop={onDrop}>
       <h3>{column.name}</h3>
       <div className="task-list">
-        {tasks.map(t=> <TaskCard key={t.id} task={t} />)}
+        {tasks.map(t=> <TaskCard key={t.id} task={t} users={users} />)}
       </div>
     </div>
   )

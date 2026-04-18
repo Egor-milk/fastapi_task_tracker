@@ -55,7 +55,7 @@ export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreate
 
       <div className="columns">
         {columns.map(col=> (
-          <Column key={col.id} column={col} tasks={tasks.filter(t=>t.status===col.id)} onMoveTask={onMoveTask} />
+          <Column key={col.id} column={col} tasks={tasks.filter(t=>t.status===col.id)} onMoveTask={onMoveTask} users={users} />
         ))}
       </div>
 
