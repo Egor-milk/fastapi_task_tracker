@@ -63,7 +63,7 @@ export default function App(){
   return (
     <div className="app">
       <header>
-        <h1>Kanban — FastAPI</h1>
+        <h1>Доска планирования</h1>
       </header>
       <main>
         {loading ? <p>Загрузка...</p> : (

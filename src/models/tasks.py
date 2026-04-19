@@ -29,6 +29,10 @@ class TaskHistory(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     task_id: Mapped[int] = mapped_column(ForeignKey("tasks.id"))
+    previous_title: Mapped[str]
+    new_title: Mapped[str]
+    previous_author_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    new_author_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     previous_assignee_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     new_assignee_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     previous_status: Mapped[str]
@@ -38,6 +42,10 @@ class TaskHistory(Base):
         return TaskHistorySchema(
             id=self.id,
             task_id=self.task_id,
+            previous_title=self.previous_title,
+            new_title=self.new_title,
+            previous_author_id=self.previous_author_id,
+            new_author_id=self.new_author_id,
             previous_assignee_id=self.previous_assignee_id,
             new_assignee_id=self.new_assignee_id,
             previous_status=self.previous_status,

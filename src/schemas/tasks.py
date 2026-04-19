@@ -1,3 +1,4 @@
+from time import struct_time
 from typing import Optional
 
 from pydantic import BaseModel
@@ -22,6 +23,7 @@ class TaskSchemaAdd(BaseModel):
 
 
 class TaskSchemaEdit(BaseModel):
+    title: str
     author_id: int
     assignee_id: int
     status: str
@@ -29,6 +31,10 @@ class TaskSchemaEdit(BaseModel):
 class TaskHistorySchema(BaseModel):
     id: int
     task_id: int
+    previous_title: str
+    new_title: str
+    previous_author_id: int
+    new_author_id: int
     previous_assignee_id: int
     new_assignee_id: int
     previous_status: str
@@ -36,6 +42,10 @@ class TaskHistorySchema(BaseModel):
 
 class TaskHistorySchemaAdd(BaseModel):
     task_id: int
+    previous_title: str
+    new_title: str
+    previous_author_id: int
+    new_author_id: int
     previous_assignee_id: int
     new_assignee_id: int
     previous_status: str

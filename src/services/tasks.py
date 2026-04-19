@@ -24,6 +24,10 @@ class TasksService:
 
             task_history_log = TaskHistorySchemaAdd(
                 task_id=task_id,
+                previous_title=curr_task.title,
+                new_title=task.title,
+                previous_author_id=curr_task.author_id,
+                new_author_id=task.author_id,
                 previous_assignee_id=curr_task.assignee_id,
                 new_assignee_id=task.assignee_id,
                 previous_status=curr_task.status,
