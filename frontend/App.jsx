@@ -28,7 +28,7 @@ export default function App(){
     await fetch(`${API_BASE}/tasks/${taskId}`,{
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ author_id: task.author_id, assignee_id: task.assignee_id, status: newStatus })
+      body: JSON.stringify({ title: task.title, author_id: task.author_id, assignee_id: task.assignee_id, status: newStatus })
     })
     await fetchData()
   }
