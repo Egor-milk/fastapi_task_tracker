@@ -1,6 +1,6 @@
 :root{ --bg:#f5f7fb; --col:#fff; --accent:#4b8de0; --btn-soft:#e6f3ff; --btn-accent:linear-gradient(180deg,#6aa8f7 0%, #4b8de0 100%); }
 body{ font-family: Inter, system-ui, Arial; margin:0; background:var(--bg); color:#111 }
-.app{ padding:20px }
+.app{ max-width:1100px; margin:48px auto; padding:24px; }
 header{ margin-bottom:12px }
 .board .controls{ display:flex; gap:12px; margin-bottom:16px }
 .inline-form{ display:flex; gap:8px; align-items:center }

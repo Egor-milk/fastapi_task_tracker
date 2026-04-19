@@ -3,6 +3,7 @@ import Column from './Column'
 
 export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreateUser, onEditTask }){
   const [newUserName, setNewUserName] = useState('')
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false)
   const [newTaskTitle, setNewTaskTitle] = useState('')
   const [newTaskAuthor, setNewTaskAuthor] = useState(users[0]?.id || '')
   const [newTaskAssignee, setNewTaskAssignee] = useState(users[0]?.id || '')
@@ -23,7 +24,12 @@ export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreate
     if(!newUserName.trim()) return
     await onCreateUser(newUserName.trim())
     setNewUserName('')
+    setShowCreateUserModal(false)
   }
+
+  const openCreateUserModal = ()=> setShowCreateUserModal(true)
+  const closeCreateUserModal = ()=> { setNewUserName(''); setShowCreateUserModal(false) }
+
 
   const handleCreateTask = async (e)=>{
     e.preventDefault()
@@ -62,10 +68,9 @@ export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreate
   return (
     <div className="board">
       <section className="controls">
-        <form onSubmit={handleCreateUser} className="inline-form">
-          <input placeholder="Новый пользователь" value={newUserName} onChange={e=>setNewUserName(e.target.value)} />
-          <button type="submit">Добавить пользователя</button>
-        </form>
+        <div className="inline-form">
+          <button onClick={openCreateUserModal}>Добавить пользователя</button>
+        </div>
 
         <div className="inline-form">
           <button onClick={openCreateModal}>Добавить задачу</button>
@@ -107,6 +112,26 @@ export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreate
                 <button type="submit">Добавить</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {showCreateUserModal && (
+        <div className="modal-overlay" onClick={closeCreateUserModal}>
+          <div className="modal-content" onClick={e=>e.stopPropagation()}>
+            <button className="modal-close" onClick={closeCreateUserModal}>×</button>
+            <div className="modal-title">Добавить пользователя</div>
+            <div className="modal-body">
+              <form onSubmit={handleCreateUser} className="modal-form">
+                <label htmlFor="new-user-name">Имя</label>
+                <input id="new-user-name" placeholder="Имя пользователя" value={newUserName} onChange={e=>setNewUserName(e.target.value)} />
+
+                <div style={{display:'flex', gap:8, justifyContent:'flex-end'}}>
+                  <button type="button" onClick={closeCreateUserModal}>Отмена</button>
+                  <button type="submit">Добавить</button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}
