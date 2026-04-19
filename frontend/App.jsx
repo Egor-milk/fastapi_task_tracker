@@ -20,6 +20,12 @@ export default function App(){
     setLoading(false)
   }
 
+  const onViewHistory = async ()=>{
+    const res = await fetch(`${API_BASE}/tasks/history`)
+    if(!res.ok) return []
+    return await res.json()
+  }
+
   useEffect(()=>{ fetchData() }, [])
 
   const onMoveTask = async (taskId, newStatus) =>{
@@ -67,7 +73,7 @@ export default function App(){
       </header>
       <main>
         {loading ? <p>Загрузка...</p> : (
-          <Board users={users} tasks={tasks} onMoveTask={onMoveTask} onCreateTask={onCreateTask} onCreateUser={onCreateUser} onEditTask={onEditTask} />
+          <Board users={users} tasks={tasks} onMoveTask={onMoveTask} onCreateTask={onCreateTask} onCreateUser={onCreateUser} onEditTask={onEditTask} onViewHistory={onViewHistory} />
         )}
       </main>
     </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Column from './Column'
 
-export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreateUser, onEditTask }){
+export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreateUser, onEditTask, onViewHistory }){
   const [newUserName, setNewUserName] = useState('')
   const [showCreateUserModal, setShowCreateUserModal] = useState(false)
   const [newTaskTitle, setNewTaskTitle] = useState('')
@@ -12,6 +12,8 @@ export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreate
 
   const [showEditModal, setShowEditModal] = useState(false)
   const [editTask, setEditTask] = useState(null)
+  const [showHistoryModal, setShowHistoryModal] = useState(false)
+  const [history, setHistory] = useState([])
 
   React.useEffect(()=>{
     setNewTaskAuthor(users[0]?.id || '')
@@ -65,6 +67,19 @@ export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreate
     { id: 'done', name: 'Готов' }
   ]
 
+  const findName = (id)=>{
+    const u = users.find(u=>u.id == id)
+    return u ? u.name : id
+  }
+
+  const openHistory = async ()=>{
+    if(!onViewHistory) return
+    const data = await onViewHistory()
+    setHistory(data || [])
+    setShowHistoryModal(true)
+  }
+  const closeHistory = ()=> setShowHistoryModal(false)
+
   return (
     <div className="board">
       <section className="controls">
@@ -74,6 +89,10 @@ export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreate
 
         <div className="inline-form">
           <button onClick={openCreateModal}>Добавить задачу</button>
+        </div>
+
+        <div className="inline-form">
+          <button onClick={openHistory}>История</button>
         </div>
       </section>
 
@@ -165,6 +184,33 @@ export default function Board({ users, tasks, onMoveTask, onCreateTask, onCreate
                 <button type="submit">Сохранить</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {showHistoryModal && (
+        <div className="modal-overlay" onClick={closeHistory}>
+          <div className="modal-content" onClick={e=>e.stopPropagation()}>
+            <button className="modal-close" onClick={closeHistory}>×</button>
+            <div className="modal-title">История изменений</div>
+            <div className="modal-body">
+              {history.length===0 ? <p>Записей не найдено</p> : (
+                <div style={{maxHeight:300, overflow:'auto'}}>
+                  {history.map(h=> (
+                    <div key={h.id} style={{padding:8, borderBottom:'1px solid #e6eefc'}}>
+                      <div><strong>Задача #{h.task_id}</strong></div>
+                      <div>Название: "{h.previous_title}" → "{h.new_title}"</div>
+                      <div>Автор: {findName(h.previous_author_id)} → {findName(h.new_author_id)}</div>
+                      <div>Исполнитель: {findName(h.previous_assignee_id)} → {findName(h.new_assignee_id)}</div>
+                      <div>Статус: {h.previous_status} → {h.new_status}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="actions">
+              <button type="button" onClick={closeHistory}>Закрыть</button>
+            </div>
           </div>
         </div>
       )}
